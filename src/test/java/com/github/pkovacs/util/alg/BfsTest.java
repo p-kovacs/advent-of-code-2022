@@ -10,12 +10,12 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.data.Cell;
+import com.github.pkovacs.util.data.CharTable;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import org.junit.jupiter.api.Test;
-import com.github.pkovacs.util.InputUtils;
-import com.github.pkovacs.util.data.CharTable;
-import com.github.pkovacs.util.data.Tile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -37,6 +37,11 @@ class BfsTest {
         graph.put("F", "B");
         graph.put("F", "G");
 
+        assertEquals(0, Bfs.dist("A", graph::get, "A"::equals));
+        assertEquals(1, Bfs.dist("A", graph::get, "B"::equals));
+        assertEquals(3, Bfs.dist("A", graph::get, "F"::equals));
+        assertEquals(2, Bfs.dist("A", graph::get, "G"::equals));
+
         var map = Bfs.run("A", graph::get);
 
         assertEquals(7, map.size());
@@ -48,25 +53,23 @@ class BfsTest {
         var result1 = Bfs.findPath("A", graph::get, "G"::equals);
 
         assertTrue(result1.isPresent());
-        assertEquals("G", result1.get().node());
+        assertEquals("G", result1.get().endNode());
         assertEquals(2, result1.get().dist());
-        assertEquals(List.of("A", "D", "G"), result1.get().path());
-        assertTrue(result1.get().isTarget());
+        assertEquals(List.of("A", "D", "G"), result1.get().nodes());
 
         graph.put("A", "G");
         var result2 = Bfs.findPath("A", graph::get, "G"::equals);
 
         assertTrue(result2.isPresent());
-        assertEquals("G", result2.get().node());
+        assertEquals("G", result2.get().endNode());
         assertEquals(1, result2.get().dist());
-        assertEquals(List.of("A", "G"), result2.get().path());
-        assertTrue(result2.get().isTarget());
+        assertEquals(List.of("A", "G"), result2.get().nodes());
 
         var result3 = Bfs.findPath("A", graph::get, "A"::equals);
 
         assertTrue(result3.isPresent());
         assertEquals(0, result3.get().dist());
-        assertEquals(List.of("A"), result3.get().path());
+        assertEquals(List.of("A"), result3.get().nodes());
 
         var result4 = Bfs.findPath("B", graph::get, "C"::equals);
 
@@ -81,18 +84,18 @@ class BfsTest {
         var input = InputUtils.readLines(InputUtils.getPath(getClass(), "maze.txt"));
         var maze = new CharTable(input);
 
-        var start = new Tile(0, 0);
-        var end = new Tile(maze.rowCount() - 1, maze.colCount() - 1);
+        var start = new Cell(0, 0);
+        var end = new Cell(maze.rowCount() - 1, maze.colCount() - 1);
 
         var result = Bfs.findPath(start,
-                tile -> maze.neighborCells(tile).filter(t -> maze.get(t) == '.').toList(),
+                cell -> maze.neighbors(cell).filter(n -> maze.get(n) == '.').toList(),
                 end::equals);
 
         assertTrue(result.isPresent());
-        assertEquals(end, result.get().node());
+        assertEquals(end, result.get().endNode());
         assertEquals(50, result.get().dist());
 
-        var path = result.get().path();
+        var path = result.get().nodes();
         assertEquals(51, path.size());
         assertEquals(start, path.get(0));
         assertEquals(end, path.get(path.size() - 1));
@@ -131,7 +134,7 @@ class BfsTest {
                         new State(2, 0),
                         new State(2, 5),
                         new State(3, 4)),
-                result.get().path());
+                result.get().nodes());
     }
 
     @Test
@@ -145,10 +148,10 @@ class BfsTest {
         assertTrue(result2.isPresent());
         assertTrue(result3.isPresent());
         assertTrue(result4.isPresent());
-        assertEquals(List.of(0, 1, 2, 4, 8, 16, 32, 64, 128), result1.get().path());
-        assertEquals(List.of(0, 1, 2, 3, 6, 7, 14, 15, 30, 31, 62, 63, 126, 127), result2.get().path());
-        assertEquals(List.of(0, 1, 2, 4, 5, 10, 20, 21, 42), result3.get().path());
-        assertEquals(List.of(0, 1, 2, 4, 8, 16, 17, 34, 68, 136, 137), result4.get().path());
+        assertEquals(List.of(0, 1, 2, 4, 8, 16, 32, 64, 128), result1.get().nodes());
+        assertEquals(List.of(0, 1, 2, 3, 6, 7, 14, 15, 30, 31, 62, 63, 126, 127), result2.get().nodes());
+        assertEquals(List.of(0, 1, 2, 4, 5, 10, 20, 21, 42), result3.get().nodes());
+        assertEquals(List.of(0, 1, 2, 4, 8, 16, 17, 34, 68, 136, 137), result4.get().nodes());
     }
 
     @Test
@@ -161,8 +164,18 @@ class BfsTest {
                 i -> nodes.indexOf(i) >= 42);
 
         assertTrue(result.isPresent());
-        assertTrue(result.get().isTarget());
         assertEquals(6, result.get().dist());
+    }
+
+    @Test
+    void testMultipleSources() {
+        var result = Bfs.findPathFromAny(IntStream.range(82, 100).boxed().toList(),
+                i -> List.of(i - 3, i - 7),
+                i -> i == 42);
+
+        assertTrue(result.isPresent());
+        assertEquals(6, result.get().dist());
+        assertEquals(List.of(84, 77, 70, 63, 56, 49, 42), result.get().nodes());
     }
 
     @Test
@@ -178,7 +191,7 @@ class BfsTest {
 
         assertTrue(path.isPresent());
         assertEquals(5, path.get().dist());
-        assertEquals(target, path.get().node());
+        assertEquals(target, path.get().endNode());
     }
 
     private static Stream<Integer> concat(Collection<Integer> collection, int i) {

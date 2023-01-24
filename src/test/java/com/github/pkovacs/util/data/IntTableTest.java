@@ -1,6 +1,9 @@
 package com.github.pkovacs.util.data;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +15,41 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class IntTableTest extends AbstractTableTest<Integer> {
 
     @Test
+    void testConstructors() {
+        var t1 = new IntTable(3, 2, 42);
+
+        var t2 = new IntTable(t1);
+        t2.set(1, 1, 0);
+
+        assertEquals(42, t1.get(1, 1));
+        assertEquals(0, t2.get(1, 1));
+
+        var t3 = new IntTable(t2.asArray());
+        t3.set(0, 0, -1);
+        t2.set(0, 1, -2);
+
+        assertEquals(42, t1.get(0, 0));
+        assertEquals(-1, t2.get(0, 0));
+        assertEquals(-1, t3.get(0, 0));
+        assertEquals(42, t1.get(0, 1));
+        assertEquals(-2, t2.get(0, 1));
+        assertEquals(-2, t3.get(0, 1));
+    }
+
+    @Test
+    void testWrapMethods() {
+        var cells = List.of(new Cell(12, 12), new Cell(13, 13), new Cell(11, 11), new Cell(14, 11));
+        assertContentEquals(new int[][] { { 10, 0, 0 }, { 0, 10, 0 }, { 0, 0, 10 }, { 10, 0, 0 } },
+                IntTable.wrap(cells, 10, 0));
+
+        var table1 = new IntTable(new int[][] { { 0, 1, 2, 3 }, { 100, 101, 102, 103 }, { 200, 201, 202, 203 } });
+        var table2 = new IntTable(new int[][] { { -1, 1, -1, 3 }, { 100, -1, 102, -1 }, { -1, 201, -1, 203 } });
+        var map = table1.cells().filter(c -> (c.row() + c.col()) % 2 == 1)
+                .collect(Collectors.toMap(c -> c, table1::get));
+        assertEquals(table2, IntTable.wrap(map, -1));
+    }
+
+    @Test
     void testGettersAndSetters() {
         var table = new IntTable(3, 4);
 
@@ -20,24 +58,24 @@ class IntTableTest extends AbstractTableTest<Integer> {
 
         assertContentEquals(new int[][] { { 0, 0, 0, 0 }, { 0, 0, 0, 0 }, { 0, 0, 0, 0 } }, table);
 
-        table.cells().forEach(t -> table.set(t, t.row() * 100 + t.col()));
+        table.cells().forEach(c -> table.set(c, c.row() * 100 + c.col()));
 
         assertContentEquals(new int[][] { { 0, 1, 2, 3 }, { 100, 101, 102, 103 }, { 200, 201, 202, 203 } }, table);
 
-        table.cells().forEach(t -> table.update(t, x -> 2 * x));
+        table.cells().forEach(c -> table.update(c, x -> 2 * x));
         table.set(0, 0, 42);
-        table.set(new Tile(2, 2), -1);
+        table.set(new Cell(2, 2), -1);
 
         assertContentEquals(new int[][] { { 42, 2, 4, 6 }, { 200, 202, 204, 206 }, { 400, 402, -1, 406 } }, table);
 
         table.update(0, 0, v -> v + 6);
         assertEquals(49, table.inc(0, 0));
-        assertEquals(50, table.inc(new Tile(0, 0)));
-        assertEquals(-10, table.update(new Tile(2, 2), v -> v * 10));
+        assertEquals(50, table.inc(new Cell(0, 0)));
+        assertEquals(-10, table.update(new Cell(2, 2), v -> v * 10));
 
         assertContentEquals(new int[][] { { 50, 2, 4, 6 }, { 200, 202, 204, 206 }, { 400, 402, -10, 406 } }, table);
 
-        table.updateAll(v -> v / 2);
+        table.cells().forEach(c -> table.update(c, v -> v / 2));
 
         assertContentEquals(new int[][] { { 25, 1, 2, 3 }, { 100, 101, 102, 103 }, { 200, 201, -5, 203 } }, table);
         assertEquals(1, table.count(101));
@@ -101,19 +139,19 @@ class IntTableTest extends AbstractTableTest<Integer> {
         assertEquals(15, table.col(1).mapToInt(table::get).sum());
         assertEquals(18, table.col(2).mapToInt(table::get).sum());
         assertEquals(21, table.col(3).mapToInt(table::get).sum());
+    }
 
-        assertEquals(66, table.values(0, 0, 3, 4).sum());
-        assertEquals(0, table.values(0, 0, 3, 4).min().orElseThrow());
-        assertEquals(11, table.values(0, 0, 3, 4).max().orElseThrow());
-        assertEquals(24, table.values(1, 1, 3, 4).sum());
-        assertEquals(1, table.values(1, 1, 3, 4).min().orElseThrow());
-        assertEquals(7, table.values(1, 1, 3, 4).max().orElseThrow());
-        assertEquals(14, table.values(1, 1, 3, 3).sum());
-        assertEquals(1, table.values(1, 1, 3, 3).min().orElseThrow());
-        assertEquals(6, table.values(1, 1, 3, 3).max().orElseThrow());
-        assertEquals(11, table.values(2, 1, 3, 3).sum());
-        assertEquals(5, table.values(2, 1, 3, 3).min().orElseThrow());
-        assertEquals(6, table.values(2, 1, 3, 3).max().orElseThrow());
+    @Test
+    void testFindMethods() {
+        var table = new IntTable(new int[][] { { 1, 2, 3 }, { 10, 20, 30 }, { 1, 2, 3 }, { -1, -2, -3 } });
+
+        assertEquals(new Cell(1, 2), table.find(30));
+        assertEquals(new Cell(0, 1), table.find(2));
+        assertThrows(NoSuchElementException.class, () -> table.find(42));
+
+        assertEquals(List.of(new Cell(1, 2)), table.findAll(30).toList());
+        assertEquals(List.of(new Cell(0, 1), new Cell(2, 1)), table.findAll(2).toList());
+        assertEquals(List.of(), table.findAll(42).toList());
     }
 
     @Test

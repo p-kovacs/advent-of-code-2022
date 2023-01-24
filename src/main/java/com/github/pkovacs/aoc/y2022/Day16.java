@@ -29,10 +29,10 @@ public class Day16 {
         var graph = new ArrayList<List<Integer>>();
         var flow = new ArrayList<Integer>();
         for (var line : lines) {
-            var parts = InputUtils.scan(line, "Valve %s has flow rate=%d; tunnels? leads? to valves? %s");
+            var parts = InputUtils.parse(line, "Valve %s has flow rate=%d; tunnels? leads? to valves? %s");
             var list = Arrays.stream(parts.get(2).get().split(",")).map(String::trim).map(names::indexOf).toList();
             graph.add(list);
-            flow.add(parts.get(1).asInt());
+            flow.add(parts.get(1).toInt());
         }
         int nodeCount = names.size();
         var valvesWithFlow = IntStream.range(0, nodeCount).filter(i -> flow.get(i) > 0).toArray();
@@ -40,7 +40,7 @@ public class Day16 {
         // Compute distances between the valves
         var dist = new int[nodeCount][nodeCount];
         IntStream.range(0, nodeCount).forEach(i ->
-                Bfs.run(i, graph::get).values().forEach(p -> dist[i][p.node()] = (int) p.dist()));
+                Bfs.run(i, graph::get).values().forEach(p -> dist[i][p.endNode()] = (int) p.dist()));
 
         // Set the "advance" function for state traversal
         Function<State, List<State>> advance = s -> {

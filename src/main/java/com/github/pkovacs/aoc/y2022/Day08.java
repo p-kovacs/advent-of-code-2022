@@ -6,9 +6,9 @@ import java.util.stream.Stream;
 
 import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.data.Cell;
 import com.github.pkovacs.util.data.CharTable;
 import com.github.pkovacs.util.data.Direction;
-import com.github.pkovacs.util.data.Tile;
 
 public class Day08 {
 
@@ -20,7 +20,7 @@ public class Day08 {
         System.out.println("Part 2: " + table.cells().mapToLong(cell -> getScore(table, cell)).max().orElseThrow());
     }
 
-    public static long getScore(CharTable table, Tile cell) {
+    public static long getScore(CharTable table, Cell cell) {
         var current = table.get(cell);
         long prod = 1;
         for (var dir : Direction.values()) {
@@ -30,13 +30,13 @@ public class Day08 {
         return prod;
     }
 
-    private static boolean isVisible(CharTable table, Tile cell) {
+    private static boolean isVisible(CharTable table, Cell cell) {
         var current = table.get(cell);
         return Arrays.stream(Direction.values())
                 .anyMatch(dir -> getTrees(table, cell, dir).stream().allMatch(c -> c < current));
     }
 
-    private static List<Character> getTrees(CharTable table, Tile cell, Direction dir) {
+    private static List<Character> getTrees(CharTable table, Cell cell, Direction dir) {
         return Stream.iterate(cell.neighbor(dir), table::containsCell, t -> t.neighbor(dir)).map(table::get).toList();
     }
 

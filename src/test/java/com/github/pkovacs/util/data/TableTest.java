@@ -12,6 +12,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class TableTest extends AbstractTableTest<String> {
 
     @Test
+    void testConstructors() {
+        var table1 = createTestTable(2, 3);
+        var table2 = new Table<>(table1);
+
+        assertEquals(table1, table2);
+
+        var table3 = new Table<>(new String[][] { { "A1", "A2", "A3" }, { "B1", "B2", "B3" } });
+
+        assertEquals(table1, table3);
+
+        var table4 = new Table<>(2, 3, this::getTestValue);
+
+        assertEquals(table1, table4);
+    }
+
+    @Test
     void testGettersAndSetters() {
         var table = new Table<String>(3, 4);
 
@@ -23,16 +39,16 @@ class TableTest extends AbstractTableTest<String> {
                 Arrays.asList(new String[4]),
                 Arrays.asList(new String[4])), table);
 
-        table.cells().forEach(t -> table.set(t, String.valueOf((char) ('A' + t.row())) + (t.col() + 1)));
+        table.cells().forEach(c -> table.set(c, String.valueOf((char) ('A' + c.row())) + (c.col() + 1)));
 
         assertContentEquals(List.of(
                 List.of("A1", "A2", "A3", "A4"),
                 List.of("B1", "B2", "B3", "B4"),
                 List.of("C1", "C2", "C3", "C4")), table);
 
-        table.cells().forEach(t -> table.update(t, x -> x + "!"));
+        table.cells().forEach(c -> table.update(c, x -> x + "!"));
         table.set(0, 0, "xyz");
-        table.set(new Tile(2, 2), "abc");
+        table.set(new Cell(2, 2), "abc");
 
         assertContentEquals(List.of(
                 List.of("xyz", "A2!", "A3!", "A4!"),
@@ -73,7 +89,11 @@ class TableTest extends AbstractTableTest<String> {
 
     @Override
     Table<String> createTestTable(int rowCount, int colCount) {
-        return new Table<>(rowCount, colCount, (r, c) -> String.valueOf((char) ('A' + r)) + (c + 1));
+        return new Table<>(rowCount, colCount, this::getTestValue);
+    }
+
+    private String getTestValue(int row, int col) {
+        return String.valueOf((char) ('A' + row)) + (col + 1);
     }
 
 }

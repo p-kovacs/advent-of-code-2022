@@ -30,9 +30,12 @@ class InputUtilsTest {
 
     @Test
     void testParseIntegers() {
-        String input = "I have 5 apples and 12 bananas. -42 is the opposite of 42.";
-        assertArrayEquals(new int[] { 5, 12, -42, 42 }, InputUtils.parseInts(input));
-        assertArrayEquals(new long[] { 5, 12, -42, 42 }, InputUtils.parseLongs(input));
+        String input1 = "5 apples and 12 bananas. -42 is the opposite of 42.";
+        String input2 = "-1-2+3, 5-10, 6+-12. A23, B-34. [-100,+200]";
+        assertArrayEquals(new int[] { 5, 12, -42, 42 }, InputUtils.parseInts(input1));
+        assertArrayEquals(new long[] { 5, 12, -42, 42 }, InputUtils.parseLongs(input1));
+        assertArrayEquals(new int[] { -1, 2, 3, 5, 10, 6, -12, 23, 34, -100, 200 }, InputUtils.parseInts(input2));
+        assertArrayEquals(new long[] { -1, 2, 3, 5, 10, 6, -12, 23, 34, -100, 200 }, InputUtils.parseLongs(input2));
     }
 
     @Test
@@ -48,25 +51,20 @@ class InputUtilsTest {
     }
 
     @Test
-    void testStream() {
-        assertEquals(2, InputUtils.stream("hello").filter(c -> c == 'l').count());
-        assertEquals(3, InputUtils.stream("hello".toCharArray()).filter(c -> c != 'l').count());
-    }
+    void testParse() {
+        var values = InputUtils.parse("Product PID_4242X is ordered.", ".*PID_%d%c is %s[.]");
 
-    @Test
-    void testScan() {
-        var values = InputUtils.scan("Product PID_4242X is ordered.", ".*PID_%d%c is %s[.]");
+        assertEquals("[4242, X, ordered]", values.toString());
 
         assertEquals(3, values.size());
-        assertTrue(values.get(0).isInteger());
-        assertEquals(4242, values.get(0).asInt());
+        assertTrue(values.get(0).isLong());
+        assertEquals(4242, values.get(0).toInt());
+        assertEquals(4242L, values.get(0).toLong());
         assertTrue(values.get(1).isChar());
-        assertEquals('X', values.get(1).asChar());
+        assertEquals('X', values.get(1).toChar());
         assertTrue(values.get(2).isString());
         assertEquals("ordered", values.get(2).get());
-
-        assertEquals("[ParsedValue(Long: 4242), ParsedValue(Character: X), ParsedValue(String: ordered)]",
-                values.toString());
+        assertEquals("ordered", values.get(2).toString());
     }
 
 }

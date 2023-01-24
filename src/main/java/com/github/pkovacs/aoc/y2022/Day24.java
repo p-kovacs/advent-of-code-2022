@@ -6,7 +6,7 @@ import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.InputUtils;
 import com.github.pkovacs.util.alg.Bfs;
 import com.github.pkovacs.util.data.CharTable;
-import com.github.pkovacs.util.data.Tile;
+import com.github.pkovacs.util.data.Cell;
 
 public class Day24 {
 
@@ -25,9 +25,9 @@ public class Day24 {
         System.out.println("Part 2: " + (t1 + t2 + t3));
     }
 
-    private static int dist(CharTable table, Tile start, Tile goal, int delta) {
+    private static int dist(CharTable table, Cell start, Cell goal, int delta) {
         return (int) Bfs.findPath(new State(start, delta),
-                s -> Stream.concat(table.neighborCells(s.cell), Stream.of(s.cell))
+                s -> Stream.concat(table.neighbors(s.cell), Stream.of(s.cell))
                         .filter(c -> table.get(c) != '#')
                         .filter(c -> table.get(c.row(), wrap(c.col() + s.time + 1, table.colCount())) != '<')
                         .filter(c -> table.get(c.row(), wrap(c.col() - s.time - 1, table.colCount())) != '>')
@@ -42,6 +42,6 @@ public class Day24 {
         return Math.floorMod(i - 1, size - 2) + 1;
     }
 
-    private record State(Tile cell, int time) {}
+    private record State(Cell cell, int time) {}
 
 }

@@ -11,7 +11,7 @@ import com.github.pkovacs.util.InputUtils;
 import com.github.pkovacs.util.data.CharTable;
 import com.github.pkovacs.util.data.CounterMap;
 import com.github.pkovacs.util.data.Direction;
-import com.github.pkovacs.util.data.Tile;
+import com.github.pkovacs.util.data.Cell;
 
 public class Day23 {
 
@@ -29,7 +29,7 @@ public class Day23 {
         var elves = table.cells().filter(c -> table.get(c) == '#').collect(Collectors.toSet());
 
         for (int round = 0; true; round++) {
-            var map = new CounterMap<Tile>();
+            var map = new CounterMap<Cell>();
             for (var elf : elves) {
                 map.inc(move(elves, elf, round));
             }
@@ -37,7 +37,7 @@ public class Day23 {
                 return round + 1;
             }
 
-            var set = new HashSet<Tile>();
+            var set = new HashSet<Cell>();
             for (var elf : elves) {
                 var next = move(elves, elf, round);
                 set.add(map.get(next) == 1 ? next : elf);
@@ -46,17 +46,17 @@ public class Day23 {
             elves = set;
 
             if (part == 1 && round == 9) {
-                int maxRow = elves.stream().mapToInt(Tile::row).max().orElseThrow();
-                int minRow = elves.stream().mapToInt(Tile::row).min().orElseThrow();
-                int maxCol = elves.stream().mapToInt(Tile::col).max().orElseThrow();
-                int minCol = elves.stream().mapToInt(Tile::col).min().orElseThrow();
+                int maxRow = elves.stream().mapToInt(Cell::row).max().orElseThrow();
+                int minRow = elves.stream().mapToInt(Cell::row).min().orElseThrow();
+                int maxCol = elves.stream().mapToInt(Cell::col).max().orElseThrow();
+                int minCol = elves.stream().mapToInt(Cell::col).min().orElseThrow();
                 return (maxRow - minRow + 1) * (maxCol - minCol + 1) - elves.size();
             }
         }
     }
 
-    private static Tile move(Set<Tile> elves, Tile elf, int round) {
-        if (elf.extendedNeighbors().stream().noneMatch(elves::contains)) {
+    private static Cell move(Set<Cell> elves, Cell elf, int round) {
+        if (elf.extendedNeighbors().noneMatch(elves::contains)) {
             return elf;
         }
         for (int i = 0; i < 4; i++) {

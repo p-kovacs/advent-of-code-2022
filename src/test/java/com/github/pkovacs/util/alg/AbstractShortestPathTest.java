@@ -11,20 +11,20 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.alg.Dijkstra.Edge;
+import com.github.pkovacs.util.data.Cell;
+import com.github.pkovacs.util.data.CharTable;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.MultimapBuilder;
 import org.junit.jupiter.api.Test;
-import com.github.pkovacs.util.InputUtils;
-import com.github.pkovacs.util.alg.Dijkstra.Edge;
-import com.github.pkovacs.util.data.CharTable;
-import com.github.pkovacs.util.data.Tile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 abstract class AbstractShortestPathTest {
 
-    abstract <T> Optional<PathResult<T>> findPath(T source,
+    abstract <T> Optional<Path<T>> findPath(T source,
             Function<? super T, ? extends Iterable<Edge<T>>> edgeProvider,
             Predicate<? super T> targetPredicate);
 
@@ -42,7 +42,7 @@ abstract class AbstractShortestPathTest {
         var result = findPath("A", graph::get, "E"::equals);
         assertTrue(result.isPresent());
         assertEquals(10, result.get().dist());
-        assertEquals(List.of("A", "D", "B", "C", "E"), result.get().path());
+        assertEquals(List.of("A", "D", "B", "C", "E"), result.get().nodes());
     }
 
     @Test
@@ -55,17 +55,17 @@ abstract class AbstractShortestPathTest {
 
         var input = InputUtils.readLines(InputUtils.getPath(getClass(), "maze.txt"));
         var maze = new CharTable(input);
-        var start = new Tile(0, 0);
-        var end = new Tile(maze.rowCount() - 1, maze.colCount() - 1);
+        var start = new Cell(0, 0);
+        var end = new Cell(maze.rowCount() - 1, maze.colCount() - 1);
 
         // Find path with large detonationTime --> same as BFS
         long detonationTime = 32;
         var result = findPathInMaze(maze, start, end, detonationTime);
 
         assertEquals(50, result.dist());
-        assertEquals(51, result.path().size());
-        assertEquals(start, result.path().get(0));
-        assertEquals(end, result.path().get(result.path().size() - 1));
+        assertEquals(51, result.nodes().size());
+        assertEquals(start, result.nodes().get(0));
+        assertEquals(end, result.nodes().get(result.nodes().size() - 1));
 
         // Find path with smaller detonationTime --> better than BFS
         detonationTime = 30;
@@ -78,13 +78,13 @@ abstract class AbstractShortestPathTest {
         result = findPathInMaze(maze, start, end, detonationTime);
 
         assertEquals(20, result.dist());
-        assertEquals(start.dist(end), result.dist());
+        assertEquals(start.dist1(end), result.dist());
     }
 
-    private PathResult<Tile> findPathInMaze(CharTable maze, Tile start, Tile end, long detonationTime) {
+    private Path<Cell> findPathInMaze(CharTable maze, Cell start, Cell end, long detonationTime) {
         var result = findPath(start,
-                tile -> maze.neighborCells(tile)
-                        .map(t -> new Edge<>(t, maze.get(t) == '.' ? 1 : detonationTime))
+                cell -> maze.neighbors(cell)
+                        .map(n -> new Edge<>(n, maze.get(n) == '.' ? 1 : detonationTime))
                         .toList(),
                 end::equals);
 
@@ -105,7 +105,6 @@ abstract class AbstractShortestPathTest {
                 i -> nodes.indexOf(i) >= 42);
 
         assertTrue(result.isPresent());
-        assertTrue(result.get().isTarget());
         assertEquals(6, result.get().dist());
     }
 
@@ -121,11 +120,11 @@ abstract class AbstractShortestPathTest {
         var target = List.of(1, 0, 1, 0, 0, 1, 2);
         Predicate<Collection<Integer>> predicate = target::equals;
 
-        var path = ShortestPath.findPath(start, neighborProvider, predicate);
+        var path = findPath(start, neighborProvider, predicate);
 
         assertTrue(path.isPresent());
         assertEquals(42, path.get().dist());
-        assertEquals(target, path.get().node());
+        assertEquals(target, path.get().endNode());
     }
 
     private static Stream<Integer> concat(Collection<Integer> collection, int i) {

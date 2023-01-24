@@ -6,7 +6,7 @@ import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.InputUtils;
 import com.github.pkovacs.util.data.CharTable;
 import com.github.pkovacs.util.data.Direction;
-import com.github.pkovacs.util.data.Tile;
+import com.github.pkovacs.util.data.Cell;
 
 public class Day22 {
 
@@ -35,7 +35,7 @@ public class Day22 {
     }
 
     private static int solve(CharTable table, String[] cmd, int part) {
-        Tile cell = table.row(1).filter(c -> table.get(c) == '.').findFirst().orElseThrow();
+        Cell cell = table.row(1).filter(c -> table.get(c) == '.').findFirst().orElseThrow();
         var dir = Direction.EAST;
         for (var step : cmd) {
             switch (step) {
@@ -50,10 +50,10 @@ public class Day22 {
                         if (table.get(c) == ' ' && part == 1) {
                             // Wrap in part 1
                             c = switch (dir) {
-                                case NORTH -> new Tile(table.rowCount() - 1, c.col());
-                                case SOUTH -> new Tile(0, c.col());
-                                case WEST -> new Tile(c.row(), table.colCount() - 1);
-                                case EAST -> new Tile(c.row(), 0);
+                                case NORTH -> new Cell(table.rowCount() - 1, c.col());
+                                case SOUTH -> new Cell(0, c.col());
+                                case WEST -> new Cell(c.row(), table.colCount() - 1);
+                                case EAST -> new Cell(c.row(), 0);
                             };
                             while (table.get(c) == ' ') {
                                 c = c.neighbor(dir);
@@ -66,46 +66,46 @@ public class Day22 {
                             int a = (c.row() + 49) / 50;
                             int b = (c.col() + 49) / 50;
                             if (a == 0 && b == 2) {
-                                c = new Tile(c.col() + 100, 1);
+                                c = new Cell(c.col() + 100, 1);
                                 d = Direction.EAST;
                             } else if (a == 0 && b == 3) {
-                                c = new Tile(200, c.col() - 100);
+                                c = new Cell(200, c.col() - 100);
                                 d = Direction.NORTH;
                             } else if (a == 1 && b == 4) {
-                                c = new Tile(151 - c.row(), 100);
+                                c = new Cell(151 - c.row(), 100);
                                 d = Direction.WEST;
                             } else if (a == 2 && b == 3 && d == Direction.SOUTH) {
-                                c = new Tile(c.col() - 50, 100);
+                                c = new Cell(c.col() - 50, 100);
                                 d = Direction.WEST;
                             } else if (a == 2 && b == 3 && d == Direction.EAST) {
-                                c = new Tile(50, c.row() + 50);
+                                c = new Cell(50, c.row() + 50);
                                 d = Direction.NORTH;
                             } else if (a == 3 && b == 3) {
-                                c = new Tile(151 - c.row(), 150);
+                                c = new Cell(151 - c.row(), 150);
                                 d = Direction.WEST;
                             } else if (a == 4 && b == 2 && d == Direction.SOUTH) {
-                                c = new Tile(c.col() + 100, 50);
+                                c = new Cell(c.col() + 100, 50);
                                 d = Direction.WEST;
                             } else if (a == 4 && b == 2 && d == Direction.EAST) {
-                                c = new Tile(150, c.row() - 100);
+                                c = new Cell(150, c.row() - 100);
                                 d = Direction.NORTH;
                             } else if (a == 5 && b == 1) {
-                                c = new Tile(1, c.col() + 100);
+                                c = new Cell(1, c.col() + 100);
                                 d = Direction.SOUTH;
                             } else if (a == 4 && b == 0) {
-                                c = new Tile(1, c.row() - 100);
+                                c = new Cell(1, c.row() - 100);
                                 d = Direction.SOUTH;
                             } else if (a == 3 && b == 0) {
-                                c = new Tile(151 - c.row(), 51);
+                                c = new Cell(151 - c.row(), 51);
                                 d = Direction.EAST;
                             } else if (a == 2 && b == 1 && d == Direction.NORTH) {
-                                c = new Tile(c.col() + 50, 51);
+                                c = new Cell(c.col() + 50, 51);
                                 d = Direction.EAST;
                             } else if (a == 2 && b == 1 && d == Direction.WEST) {
-                                c = new Tile(101, c.row() - 50);
+                                c = new Cell(101, c.row() - 50);
                                 d = Direction.SOUTH;
                             } else if (a == 1 && b == 1) {
-                                c = new Tile(151 - c.row(), 1);
+                                c = new Cell(151 - c.row(), 1);
                                 d = Direction.EAST;
                             } else {
                                 throw new IllegalStateException(); // should not occur :)

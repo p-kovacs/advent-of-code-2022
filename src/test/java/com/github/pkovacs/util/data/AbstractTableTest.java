@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.github.pkovacs.util.Utils;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,75 +28,108 @@ abstract class AbstractTableTest<T> {
         assertEquals(12, table.size());
         assertEquals(12, table.cells().count());
 
-        assertTrue(table.containsCell(new Tile(2, 3)));
-        assertFalse(table.containsCell(new Tile(3, 3)));
-        assertFalse(table.containsCell(new Tile(2, 4)));
+        assertTrue(table.containsCell(new Cell(2, 3)));
+        assertFalse(table.containsCell(new Cell(3, 3)));
+        assertFalse(table.containsCell(new Cell(2, 4)));
 
         var table2 = createTestTable(4, 3);
-        table2.cells().forEach(t -> table2.set0(t.row(), t.col(), table.get0(t.col(), t.row())));
+        table2.cells().forEach(c -> table2.set0(c.row(), c.col(), table.get0(c.col(), c.row())));
 
-        assertEquals(table.cells().map(t -> table.get0(t.row(), t.col())).collect(Collectors.toSet()),
-                table2.cells().map(t -> table2.get0(t.row(), t.col())).collect(Collectors.toSet()));
+        assertEquals(table.cells().map(c -> table.get0(c.row(), c.col())).collect(Collectors.toSet()),
+                table2.cells().map(c -> table2.get0(c.row(), c.col())).collect(Collectors.toSet()));
     }
 
     @Test
-    void testCellStreamMethods() {
+    void testCellAccessMethods() {
         var table = createTestTable(3, 4);
 
         assertEquals(Stream.concat(table.row(0), Stream.concat(table.row(1), table.row(2))).toList(),
                 table.cells().toList());
-        assertEquals(Stream.concat(table.row(1), table.row(2)).toList(),
-                table.cells(1, 0, 3, 4).toList());
-        assertEquals(table.row(1).toList(),
-                table.cells(1, 0, 2, 4).toList());
-        assertEquals(Stream.concat(table.row(1).limit(3), table.row(2).limit(3)).toList(),
-                table.cells(1, 0, 3, 3).toList());
-        assertEquals(Stream.concat(table.row(1).skip(1).limit(2), table.row(2).skip(1).limit(2)).toList(),
-                table.cells(1, 1, 3, 3).toList());
+        assertEquals(Utils.intersectionOf(table.row(0), table.col(0)).iterator().next(),
+                table.topLeft());
+        assertEquals(Utils.intersectionOf(table.row(2), table.col(0)).iterator().next(),
+                table.bottomLeft());
+        assertEquals(Utils.intersectionOf(table.row(0), table.col(3)).iterator().next(),
+                table.topRight());
+        assertEquals(Utils.intersectionOf(table.row(2), table.col(3)).iterator().next(),
+                table.bottomRight());
     }
 
     @Test
-    void testCellNeighbors() {
+    void testNeighbors() {
         var table = createTestTable(3, 4);
 
         assertEquals(List.of(
-                        new Tile(0, 2),
-                        new Tile(1, 3),
-                        new Tile(2, 2),
-                        new Tile(1, 1)),
-                table.neighborCells(new Tile(1, 2)).toList());
+                        new Cell(0, 2),
+                        new Cell(1, 1),
+                        new Cell(1, 3),
+                        new Cell(2, 2)),
+                table.neighbors(new Cell(1, 2)).toList());
         assertEquals(List.of(
-                        new Tile(0, 1),
-                        new Tile(1, 0)),
-                table.neighborCells(new Tile(0, 0)).toList());
+                        new Cell(0, 1),
+                        new Cell(1, 0)),
+                table.neighbors(new Cell(0, 0)).toList());
         assertEquals(List.of(
-                        new Tile(1, 1),
-                        new Tile(2, 2),
-                        new Tile(2, 0)),
-                table.neighborCells(new Tile(2, 1)).toList());
+                        new Cell(1, 1),
+                        new Cell(2, 0),
+                        new Cell(2, 2)),
+                table.neighbors(new Cell(2, 1)).toList());
+        assertEquals(List.of(
+                        new Cell(0, 0),
+                        new Cell(0, 1),
+                        new Cell(1, 0)),
+                table.neighborsAndSelf(new Cell(0, 0)).toList());
 
         assertEquals(List.of(
-                        new Tile(0, 2),
-                        new Tile(0, 3),
-                        new Tile(1, 3),
-                        new Tile(2, 3),
-                        new Tile(2, 2),
-                        new Tile(2, 1),
-                        new Tile(1, 1),
-                        new Tile(0, 1)),
-                table.extendedNeighborCells(new Tile(1, 2)).toList());
+                        new Cell(0, 1),
+                        new Cell(0, 2),
+                        new Cell(0, 3),
+                        new Cell(1, 1),
+                        new Cell(1, 3),
+                        new Cell(2, 1),
+                        new Cell(2, 2),
+                        new Cell(2, 3)),
+                table.extendedNeighbors(new Cell(1, 2)).toList());
         assertEquals(List.of(
-                        new Tile(0, 1),
-                        new Tile(1, 1),
-                        new Tile(1, 0)),
-                table.extendedNeighborCells(new Tile(0, 0)).toList());
+                        new Cell(0, 1),
+                        new Cell(1, 0),
+                        new Cell(1, 1)),
+                table.extendedNeighbors(new Cell(0, 0)).toList());
         assertEquals(List.of(
-                        new Tile(1, 1),
-                        new Tile(1, 2),
-                        new Tile(2, 2),
-                        new Tile(2, 0),
-                        new Tile(1, 0)),
-                table.extendedNeighborCells(new Tile(2, 1)).toList());
+                        new Cell(1, 0),
+                        new Cell(1, 1),
+                        new Cell(1, 2),
+                        new Cell(2, 0),
+                        new Cell(2, 2)),
+                table.extendedNeighbors(new Cell(2, 1)).toList());
+        assertEquals(List.of(
+                        new Cell(0, 0),
+                        new Cell(0, 1),
+                        new Cell(1, 0),
+                        new Cell(1, 1)),
+                table.extendedNeighborsAndSelf(new Cell(0, 0)).toList());
+    }
+
+    @Test
+    void testRays() {
+        var table = createTestTable(4, 5);
+        var cell = new Cell(3, 2);
+
+        assertEquals(List.of(new Cell(2, 2), new Cell(1, 2), new Cell(0, 2)),
+                table.ray(cell, Direction.NORTH).toList());
+        assertEquals(List.of(new Cell(3, 3), new Cell(3, 4)),
+                table.ray(cell, Direction.EAST).toList());
+        assertEquals(List.of(),
+                table.ray(cell, Direction.SOUTH).toList());
+        assertEquals(List.of(new Cell(3, 1), new Cell(3, 0)),
+                table.ray(cell, Direction.WEST).toList());
+
+        assertEquals(List.of(new Cell(2, 1), new Cell(1, 0)),
+                table.ray(cell, new Cell(2, 1)).toList());
+        assertEquals(List.of(),
+                table.ray(cell, new Cell(4, 3)).toList());
+        assertEquals(List.of(new Cell(2, 3), new Cell(1, 4)),
+                table.ray(cell, new Cell(2, 3)).toList());
     }
 
     @Test

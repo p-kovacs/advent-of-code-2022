@@ -150,14 +150,14 @@ public class Day15 {
             var ints = InputUtils.parseInts(line);
             var sp = new Point(ints[0], ints[1]);
             var bp = new Point(ints[2], ints[3]);
-            sensors.add(new Sensor(sp, bp, sp.dist(bp)));
+            sensors.add(new Sensor(sp, bp, sp.dist1(bp)));
         }
         return sensors;
     }
 
     private record Sensor(Point sp, Point bp, int d) {
         boolean excludes(Point p) {
-            return sp.dist(p) <= d;
+            return sp.dist1(p) <= d;
         }
     }
 
