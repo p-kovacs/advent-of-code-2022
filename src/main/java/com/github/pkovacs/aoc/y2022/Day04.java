@@ -2,6 +2,7 @@ package com.github.pkovacs.aoc.y2022;
 
 import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
+import com.github.pkovacs.util.data.Range;
 
 public class Day04 {
 
@@ -10,15 +11,13 @@ public class Day04 {
 
         int cnt1 = 0, cnt2 = 0;
         for (var line : lines) {
-            var parts = line.split("[,-]");
-            var a = Integer.parseInt(parts[0]);
-            var b = Integer.parseInt(parts[1]);
-            var c = Integer.parseInt(parts[2]);
-            var d = Integer.parseInt(parts[3]);
-            if ((c >= a && d <= b) || (c <= a && d >= b)) {
+            var ints = Utils.parseInts(line);
+            var a = new Range(ints[0], ints[1]);
+            var b = new Range(ints[2], ints[3]);
+            if (a.containsAll(b) || b.containsAll(a)) {
                 cnt1++;
             }
-            if (Math.max(a, c) <= Math.min(b, d)) {
+            if (a.overlaps(b)) {
                 cnt2++;
             }
         }

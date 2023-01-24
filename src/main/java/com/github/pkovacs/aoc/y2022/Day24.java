@@ -1,12 +1,10 @@
 package com.github.pkovacs.aoc.y2022;
 
-import java.util.stream.Stream;
-
 import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.alg.Bfs;
-import com.github.pkovacs.util.data.CharTable;
 import com.github.pkovacs.util.data.Cell;
+import com.github.pkovacs.util.data.CharTable;
 
 public class Day24 {
 
@@ -26,8 +24,8 @@ public class Day24 {
     }
 
     private static int dist(CharTable table, Cell start, Cell goal, int delta) {
-        return (int) Bfs.findPath(new State(start, delta),
-                s -> Stream.concat(table.neighbors(s.cell), Stream.of(s.cell))
+        return Bfs.dist(new State(start, delta),
+                s -> table.neighborsAndSelf(s.cell)
                         .filter(c -> table.get(c) != '#')
                         .filter(c -> table.get(c.row(), wrap(c.col() + s.time + 1, table.colCount())) != '<')
                         .filter(c -> table.get(c.row(), wrap(c.col() - s.time - 1, table.colCount())) != '>')
@@ -35,11 +33,11 @@ public class Day24 {
                         .filter(c -> table.get(wrap(c.row() - s.time - 1, table.rowCount()), c.col()) != 'v')
                         .map(c -> new State(c, s.time + 1))
                         .toList(),
-                s -> s.cell.equals(goal)).orElseThrow().dist();
+                s -> s.cell.equals(goal));
     }
 
     private static int wrap(int i, int size) {
-        return Math.floorMod(i - 1, size - 2) + 1;
+        return Utils.wrapToRange(i, 1, size - 2);
     }
 
     private record State(Cell cell, int time) {}

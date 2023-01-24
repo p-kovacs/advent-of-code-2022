@@ -27,7 +27,7 @@ public class Day20 {
         int m = n - 1;
         for (int r = 0; r < rounds; r++) {
             for (var it : items) {
-                long k = (it.v % m + m) % m;
+                long k = Utils.wrapToRange(it.v, 0, m - 1);
                 it.next.prev = it.prev;
                 it.prev.next = it.next;
                 var p = it.prev;

@@ -29,9 +29,7 @@ public class Day14 {
             sandCount++;
             Point s = start;
             while (true) {
-                var next = Stream.of(new Point(s.x(), s.y() + 1),
-                                new Point(s.x() - 1, s.y() + 1),
-                                new Point(s.x() + 1, s.y() + 1))
+                var next = Stream.of(s.add(0, 1), s.add(-1, 1), s.add(1, 1))
                         .filter(p -> p.y() <= maxY + 1)
                         .filter(p -> !map.containsKey(p))
                         .findFirst();
@@ -52,6 +50,8 @@ public class Day14 {
             }
         }
 
+//        System.out.println(CharTable.wrap(map, '.'));
+
         return sandCount;
     }
 
@@ -60,19 +60,11 @@ public class Day14 {
 
         for (var line : lines) {
             var ints = Utils.parseInts(line);
-            Point prev = new Point(ints[0], ints[1]);
+            Point current = new Point(ints[0], ints[1]);
             for (int i = 2; i < ints.length; i += 2) {
-                var p = new Point(ints[i], ints[i + 1]);
-                if (prev.x() == p.x()) {
-                    for (int y = Math.min(prev.y(), p.y()); y <= Math.max(prev.y(), p.y()); y++) {
-                        map.put(new Point(p.x(), y), '#');
-                    }
-                } else {
-                    for (int x = Math.min(prev.x(), p.x()); x <= Math.max(prev.x(), p.x()); x++) {
-                        map.put(new Point(x, p.y()), '#');
-                    }
-                }
-                prev = p;
+                var next = new Point(ints[i], ints[i + 1]);
+                current.lineTo(next).forEach(p -> map.put(p, '#'));
+                current = next;
             }
         }
 

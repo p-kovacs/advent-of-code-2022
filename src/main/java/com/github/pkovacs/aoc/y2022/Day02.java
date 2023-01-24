@@ -32,7 +32,6 @@ public class Day02 {
      */
     public static int playRound(int s1, int s2) {
         return (s2 - s1 + 4) % 3;
-        // or: s1 == s2 ? 1 : ((s1 + 1) % 3 == s2 ? 2 : 0)
     }
 
     public static int getSecondShape(int s1, int result) {

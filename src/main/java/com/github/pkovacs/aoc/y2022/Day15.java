@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.data.Point;
-import com.google.common.collect.Range;
+import com.github.pkovacs.util.data.Range;
 
 public class Day15 {
 
@@ -46,7 +46,7 @@ public class Day15 {
         for (int x = min; x <= max; ) {
             var range = findRange(ranges, x);
             if (range.isPresent()) {
-                int step = range.get().upperEndpoint() + 1 - x;
+                var step = range.get().max() + 1 - x;
                 count += step;
                 x += step;
             } else {
@@ -74,7 +74,7 @@ public class Day15 {
             for (int x = 0; x <= max; ) {
                 var range = findRange(ranges, x);
                 if (range.isPresent()) {
-                    x = range.get().upperEndpoint() + 1;
+                    x = (int) range.get().max() + 1;
                 } else {
                     return (long) x * max + y;
                 }
@@ -84,18 +84,18 @@ public class Day15 {
         return 0; // not reached
     }
 
-    private static List<Range<Integer>> collectXRanges(List<Sensor> sensors, int y) {
-        var ranges = new ArrayList<Range<Integer>>();
+    private static List<Range> collectXRanges(List<Sensor> sensors, int y) {
+        var ranges = new ArrayList<Range>();
         for (var s : sensors) {
             int dx = s.d - Math.abs(y - s.sp.y());
             if (dx >= 0) {
-                ranges.add(Range.closed(s.sp.x() - dx, s.sp.x() + dx));
+                ranges.add(new Range(s.sp.x() - dx, s.sp.x() + dx));
             }
         }
         return ranges;
     }
 
-    private static Optional<Range<Integer>> findRange(List<Range<Integer>> ranges, int v) {
+    private static Optional<Range> findRange(List<Range> ranges, int v) {
         return ranges.stream().filter(r -> r.contains(v)).findFirst();
     }
 
@@ -134,7 +134,7 @@ public class Day15 {
                 int x = (a + b) / 2;
                 int y = a - x;
                 var p = new Point(x, y);
-                if ((a + b) % 2 == 0 && x >= 0 && x <= max && y >= 0 && y <= max
+                if ((a + b) % 2 == 0 && Utils.isInRange(x, 0, max) && Utils.isInRange(y, 0, max)
                         && sensors.stream().noneMatch(s -> s.excludes(p))) {
                     return (long) x * max + y;
                 }

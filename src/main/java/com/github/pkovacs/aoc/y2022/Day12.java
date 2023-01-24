@@ -1,29 +1,28 @@
 package com.github.pkovacs.aoc.y2022;
 
-import java.util.function.Predicate;
+import java.util.Set;
 
 import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.alg.Bfs;
-import com.github.pkovacs.util.data.Cell;
 import com.github.pkovacs.util.data.CharTable;
 
 public class Day12 {
 
     public static void main(String[] args) {
-        var table = new CharTable(Utils.readCharMatrix(AocUtils.getInputPath()));
+        var lines = Utils.readLines(AocUtils.getInputPath());
+        var table = new CharTable(lines);
 
-        System.out.println("Part 1: " + solve(table, c -> table.get(c) == 'S'));
-        System.out.println("Part 2: " + solve(table, c -> getHeight(table.get(c)) == 0));
+        System.out.println("Part 1: " + solve(table, Set.of('S')));
+        System.out.println("Part 2: " + solve(table, Set.of('S', 'a')));
     }
 
-    private static long solve(CharTable table, Predicate<Cell> startPredicate) {
-        var target = table.cells().filter(c -> table.get(c) == 'E').findFirst().orElseThrow();
+    private static long solve(CharTable table, Set<Character> startChars) {
+        var sources = table.cells().filter(c -> startChars.contains(table.get(c))).toList();
+        var target = table.find('E');
 
-        return Bfs.findPathFromAny(table.cells().filter(startPredicate).toList(),
-                c -> table.neighbors(c)
-                        .filter(n -> getHeight(table.get(n)) <= getHeight(table.get(c)) + 1)
-                        .toList(),
+        return Bfs.findPathFromAny(sources,
+                c -> table.neighbors(c).filter(n -> getHeight(table.get(n)) <= getHeight(table.get(c)) + 1).toList(),
                 target::equals).orElseThrow().dist();
     }
 

@@ -8,10 +8,10 @@ import java.util.stream.Stream;
 
 import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
+import com.github.pkovacs.util.data.Cell;
 import com.github.pkovacs.util.data.CharTable;
 import com.github.pkovacs.util.data.CounterMap;
 import com.github.pkovacs.util.data.Direction;
-import com.github.pkovacs.util.data.Cell;
 
 public class Day23 {
 
@@ -24,9 +24,9 @@ public class Day23 {
         System.out.println("Part 2: " + solve(lines, 2));
     }
 
-    private static int solve(List<String> lines, int part) {
+    private static long solve(List<String> lines, int part) {
         var table = new CharTable(lines);
-        var elves = table.cells().filter(c -> table.get(c) == '#').collect(Collectors.toSet());
+        var elves = table.findAll('#').collect(Collectors.toSet());
 
         for (int round = 0; true; round++) {
             var map = new CounterMap<Cell>();
@@ -46,11 +46,7 @@ public class Day23 {
             elves = set;
 
             if (part == 1 && round == 9) {
-                int maxRow = elves.stream().mapToInt(Cell::row).max().orElseThrow();
-                int minRow = elves.stream().mapToInt(Cell::row).min().orElseThrow();
-                int maxCol = elves.stream().mapToInt(Cell::col).max().orElseThrow();
-                int minCol = elves.stream().mapToInt(Cell::col).min().orElseThrow();
-                return (maxRow - minRow + 1) * (maxCol - minCol + 1) - elves.size();
+                return Cell.rowRange(elves).count() * Cell.colRange(elves).count() - elves.size();
             }
         }
     }

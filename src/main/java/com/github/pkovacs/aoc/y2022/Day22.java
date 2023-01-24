@@ -4,14 +4,14 @@ import java.util.List;
 
 import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
+import com.github.pkovacs.util.data.Cell;
 import com.github.pkovacs.util.data.CharTable;
 import com.github.pkovacs.util.data.Direction;
-import com.github.pkovacs.util.data.Cell;
 
 public class Day22 {
 
     public static void main(String[] args) {
-        var blocks = Utils.collectLineBlocks(Utils.readString(AocUtils.getInputPath()));
+        var blocks = Utils.readLineBlocks(AocUtils.getInputPath());
 
         var table = readTable(blocks.get(0));
         var cmd = readCommands(blocks.get(1).get(0));
@@ -60,9 +60,9 @@ public class Day22 {
                             }
                         } else if (table.get(c) == ' ' && part == 2) {
                             // Wrap in part 2
-                            // Note: it seems that every input has the same layout (which is different from the layout
-                            // of the example). So it seems to be acceptable to hardcode the transformations of the
-                            // indices and the direction for this layout.
+                            // Note: it seems that every input has the same layout, so the transformations of the
+                            // indices and the direction are hardcoded for this particular layout (which is different
+                            // from the layout of the example).
                             int a = (c.row() + 49) / 50;
                             int b = (c.col() + 49) / 50;
                             if (a == 0 && b == 2) {

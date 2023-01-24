@@ -8,7 +8,7 @@ import com.github.pkovacs.util.Utils;
 public class Day01 {
 
     public static void main(String[] args) {
-        var blocks = Utils.collectLineBlocks(Utils.readString(AocUtils.getInputPath()));
+        var blocks = Utils.readLineBlocks(AocUtils.getInputPath());
 
         System.out.println("Part 1: " + solve(blocks, 1));
         System.out.println("Part 2: " + solve(blocks, 3));

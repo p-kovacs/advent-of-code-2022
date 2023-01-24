@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
-import com.github.pkovacs.util.data.Cell;
+import com.github.pkovacs.util.data.Point;
 
 public class Day09 {
 
@@ -19,10 +19,10 @@ public class Day09 {
     }
 
     private static int solve(List<String> lines, int ropeLength) {
-        var rope = new Cell[ropeLength];
-        Arrays.fill(rope, new Cell(0, 0));
+        var rope = new Point[ropeLength];
+        Arrays.fill(rope, new Point(0, 0));
 
-        var visited = new HashSet<Cell>();
+        var visited = new HashSet<Point>();
         for (var line : lines) {
             var cnt = Integer.parseInt(line.substring(2));
             for (int k = 0; k < cnt; k++) {
@@ -38,6 +38,7 @@ public class Day09 {
             }
         }
 
+//        System.out.println(CharTable.wrap(visited, '#', ' '));
         return visited.size();
     }
 

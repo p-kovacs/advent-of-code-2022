@@ -1,11 +1,9 @@
 package com.github.pkovacs.aoc.y2022;
 
-import java.util.HashSet;
 import java.util.stream.IntStream;
 
 import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
-import com.google.common.collect.Lists;
 
 public class Day06 {
 
@@ -18,7 +16,7 @@ public class Day06 {
 
     private static int solve(String input, int count) {
         return IntStream.rangeClosed(count, input.length())
-                .filter(i -> new HashSet<>(Lists.charactersOf(input).subList(i - count, i)).size() == count)
+                .filter(i -> Utils.charsOf(input).skip(i - count).limit(count).distinct().count() == count)
                 .findFirst().orElseThrow();
     }
 
