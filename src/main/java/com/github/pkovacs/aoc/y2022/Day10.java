@@ -1,13 +1,13 @@
 package com.github.pkovacs.aoc.y2022;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.data.CharTable;
 
 public class Day10 {
 
     public static void main(String[] args) {
-        var input = InputUtils.readString(AocUtils.getInputPath());
+        var input = Utils.readString(AocUtils.getInputPath());
 
         // Add a "noop" before each addx operation to make processing easier
         input = input.replaceAll("(addx .*)", "noop\n$1");

@@ -6,12 +6,12 @@ import java.util.Stack;
 import java.util.stream.Collectors;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 
 public class Day05 {
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         System.out.println("Part 1: " + solve(lines, 1));
         System.out.println("Part 2: " + solve(lines, 2));
@@ -37,7 +37,7 @@ public class Day05 {
         }
 
         for (int k = n + 2; k < lines.size(); k++) {
-            var d = InputUtils.parseInts(lines.get(k));
+            var d = Utils.parseInts(lines.get(k));
             var from = stacks.get(d[1] - 1);
             var to = stacks.get(d[2] - 1);
             if (part == 2) {

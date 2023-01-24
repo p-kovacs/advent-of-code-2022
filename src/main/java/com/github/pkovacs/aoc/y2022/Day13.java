@@ -3,12 +3,12 @@ package com.github.pkovacs.aoc.y2022;
 import java.util.ArrayList;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 
 public class Day13 {
 
     public static void main(String[] args) {
-        var lines = new ArrayList<>(InputUtils.readLines(AocUtils.getInputPath()));
+        var lines = new ArrayList<>(Utils.readLines(AocUtils.getInputPath()));
         lines.removeIf(String::isBlank);
 
         int part1 = 0;

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 
 public class Day17 {
 
@@ -22,7 +22,7 @@ public class Day17 {
     };
 
     public static void main(String[] args) {
-        var input = InputUtils.readFirstLine(AocUtils.getInputPath()).trim();
+        var input = Utils.readFirstLine(AocUtils.getInputPath()).trim();
 
         System.out.println("Part 1: " + solve(input, 2022));
         System.out.println("Part 2: " + solve(input, 1000000000000L));

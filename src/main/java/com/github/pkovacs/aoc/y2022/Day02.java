@@ -3,12 +3,12 @@ package com.github.pkovacs.aoc.y2022;
 import java.util.List;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 
 public class Day02 {
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         System.out.println("Part 1: " + solve(lines, 1));
         System.out.println("Part 2: " + solve(lines, 2));

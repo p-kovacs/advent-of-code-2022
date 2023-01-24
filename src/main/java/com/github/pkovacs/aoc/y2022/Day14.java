@@ -6,13 +6,13 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.data.Point;
 
 public class Day14 {
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         System.out.println("Part 1: " + solve(lines, 1));
         System.out.println("Part 2: " + solve(lines, 2));
@@ -59,7 +59,7 @@ public class Day14 {
         var map = new HashMap<Point, Character>();
 
         for (var line : lines) {
-            var ints = InputUtils.parseInts(line);
+            var ints = Utils.parseInts(line);
             Point prev = new Point(ints[0], ints[1]);
             for (int i = 2; i < ints.length; i += 2) {
                 var p = new Point(ints[i], ints[i + 1]);

@@ -9,12 +9,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.UnaryOperator;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 
 public class Day11 {
 
     public static void main(String[] args) {
-        var blocks = InputUtils.collectLineBlocks(InputUtils.readString(AocUtils.getInputPath()));
+        var blocks = Utils.collectLineBlocks(Utils.readString(AocUtils.getInputPath()));
 
         System.out.println("Part 1: " + solve(blocks, 1));
         System.out.println("Part 2: " + solve(blocks, 2));
@@ -48,7 +48,7 @@ public class Day11 {
 
     private static Monkey readMonkey(List<String> block) {
         var items = new ArrayDeque<Long>();
-        Arrays.stream(InputUtils.parseLongs(block.get(1))).forEach(items::add);
+        Arrays.stream(Utils.parseLongs(block.get(1))).forEach(items::add);
         var op = readOp(block.get(2).split(" = ")[1]);
         long div = Long.parseLong(block.get(3).split(" by ")[1]);
         int out1 = Integer.parseInt(block.get(4).split(" monkey ")[1]);

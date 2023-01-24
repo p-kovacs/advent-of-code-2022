@@ -9,13 +9,13 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.alg.Bfs;
 
 public class Day16 {
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         System.out.println("Part 1: " + solve(lines, 1));
         System.out.println("Part 2: " + solve(lines, 2));
@@ -29,7 +29,7 @@ public class Day16 {
         var graph = new ArrayList<List<Integer>>();
         var flow = new ArrayList<Integer>();
         for (var line : lines) {
-            var parts = InputUtils.parse(line, "Valve %s has flow rate=%d; tunnels? leads? to valves? %s");
+            var parts = Utils.parse(line, "Valve %s has flow rate=%d; tunnels? leads? to valves? %s");
             var list = Arrays.stream(parts.get(2).get().split(",")).map(String::trim).map(names::indexOf).toList();
             graph.add(list);
             flow.add(parts.get(1).toInt());

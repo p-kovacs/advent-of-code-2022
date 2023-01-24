@@ -3,7 +3,7 @@ package com.github.pkovacs.aoc.y2022;
 import java.util.Map;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 
 public class Day25 {
 
@@ -11,7 +11,7 @@ public class Day25 {
     private static final Map<Integer, Character> toSnafuDigit = Map.of(0, '0', 1, '1', 2, '2', 3, '=', 4, '-');
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         long sum = 0;
         for (var line : lines) {

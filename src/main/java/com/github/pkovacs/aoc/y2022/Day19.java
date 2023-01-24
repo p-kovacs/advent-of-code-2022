@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 
 public class Day19 {
 
     private static final int GEODE = 3;
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         System.out.println("Part 1: " + solve1(lines));
         System.out.println("Part 2: " + solve2(lines));
@@ -49,7 +49,7 @@ public class Day19 {
         Blueprint(String line) {
             costs = new int[4][4];
 
-            var ints = InputUtils.parseInts(line);
+            var ints = Utils.parseInts(line);
             costs[0][0] = ints[1];
             costs[1][0] = ints[2];
             costs[2][0] = ints[3];

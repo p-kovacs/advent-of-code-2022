@@ -7,14 +7,14 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.alg.Bfs;
 import com.github.pkovacs.util.data.Vector;
 
 public class Day18 {
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         System.out.println("Part 1: " + solve(lines, 1));
         System.out.println("Part 2: " + solve(lines, 2));
@@ -23,7 +23,7 @@ public class Day18 {
     private static long solve(List<String> lines, int part) {
         var cubes = new HashSet<Vector>();
         for (var line : lines) {
-            var ints = InputUtils.parseInts(line);
+            var ints = Utils.parseInts(line);
             cubes.add(new Vector(ints[0], ints[1], ints[2]));
         }
 

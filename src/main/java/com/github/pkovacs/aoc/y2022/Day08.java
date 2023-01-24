@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.data.Cell;
 import com.github.pkovacs.util.data.CharTable;
 import com.github.pkovacs.util.data.Direction;
@@ -13,7 +13,7 @@ import com.github.pkovacs.util.data.Direction;
 public class Day08 {
 
     public static void main(String[] args) {
-        var map = InputUtils.readCharMatrix(AocUtils.getInputPath());
+        var map = Utils.readCharMatrix(AocUtils.getInputPath());
         var table = new CharTable(map);
 
         System.out.println("Part 1: " + table.cells().filter(cell -> isVisible(table, cell)).count());

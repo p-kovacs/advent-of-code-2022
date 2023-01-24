@@ -6,13 +6,13 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.data.Cell;
 
 public class Day09 {
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         System.out.println("Part 1: " + solve(lines, 2));
         System.out.println("Part 2: " + solve(lines, 10));

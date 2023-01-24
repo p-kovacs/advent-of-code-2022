@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.stream.IntStream;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 import com.google.common.collect.Lists;
 
 public class Day06 {
 
     public static void main(String[] args) {
-        var line = InputUtils.readFirstLine(AocUtils.getInputPath());
+        var line = Utils.readFirstLine(AocUtils.getInputPath());
 
         System.out.println("Part 1: " + solve(line, 4));
         System.out.println("Part 2: " + solve(line, 14));

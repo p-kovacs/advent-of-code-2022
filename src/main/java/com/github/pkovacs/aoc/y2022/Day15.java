@@ -7,14 +7,14 @@ import java.util.Optional;
 import java.util.stream.IntStream;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.data.Point;
 import com.google.common.collect.Range;
 
 public class Day15 {
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         var sensors = readSensors(lines);
 
@@ -147,7 +147,7 @@ public class Day15 {
     private static List<Sensor> readSensors(List<String> lines) {
         var sensors = new ArrayList<Sensor>();
         for (var line : lines) {
-            var ints = InputUtils.parseInts(line);
+            var ints = Utils.parseInts(line);
             var sp = new Point(ints[0], ints[1]);
             var bp = new Point(ints[2], ints[3]);
             sensors.add(new Sensor(sp, bp, sp.dist1(bp)));

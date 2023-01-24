@@ -1,12 +1,12 @@
 package com.github.pkovacs.aoc.y2022;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 
 public class Day04 {
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         int cnt1 = 0, cnt2 = 0;
         for (var line : lines) {

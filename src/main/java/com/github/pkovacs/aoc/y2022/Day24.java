@@ -3,7 +3,7 @@ package com.github.pkovacs.aoc.y2022;
 import java.util.stream.Stream;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.alg.Bfs;
 import com.github.pkovacs.util.data.CharTable;
 import com.github.pkovacs.util.data.Cell;
@@ -11,7 +11,7 @@ import com.github.pkovacs.util.data.Cell;
 public class Day24 {
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         var table = new CharTable(lines);
         var start = table.row(0).filter(c -> table.get(c) == '.').findFirst().orElseThrow();

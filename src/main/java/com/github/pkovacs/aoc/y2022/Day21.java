@@ -4,12 +4,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.github.pkovacs.aoc.AocUtils;
-import com.github.pkovacs.util.InputUtils;
+import com.github.pkovacs.util.Utils;
 
 public class Day21 {
 
     public static void main(String[] args) {
-        var lines = InputUtils.readLines(AocUtils.getInputPath());
+        var lines = Utils.readLines(AocUtils.getInputPath());
 
         var monkeys = lines.stream().collect(Collectors.toMap(s -> s.substring(0, 4), s -> s.substring(6)));
 
