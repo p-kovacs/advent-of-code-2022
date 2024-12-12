@@ -8,7 +8,6 @@ import java.util.Queue;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.UnaryOperator;
 
-import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
 
 public class Day11 {

@@ -3,7 +3,6 @@ package com.github.pkovacs.aoc.y2022;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
 
 public class Day03 {

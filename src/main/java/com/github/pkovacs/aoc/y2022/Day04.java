@@ -1,6 +1,5 @@
 package com.github.pkovacs.aoc.y2022;
 
-import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.data.Range;
 
