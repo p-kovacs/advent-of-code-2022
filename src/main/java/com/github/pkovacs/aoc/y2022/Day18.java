@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.alg.Bfs;
 import com.github.pkovacs.util.data.Box;

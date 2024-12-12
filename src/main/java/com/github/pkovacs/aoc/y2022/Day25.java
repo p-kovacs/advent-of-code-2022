@@ -2,7 +2,6 @@ package com.github.pkovacs.aoc.y2022;
 
 import java.util.Map;
 
-import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
 
 public class Day25 {

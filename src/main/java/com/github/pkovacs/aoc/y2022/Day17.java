@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
 
 public class Day17 {

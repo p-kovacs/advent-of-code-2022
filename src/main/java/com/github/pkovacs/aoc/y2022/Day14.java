@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import com.github.pkovacs.aoc.AocUtils;
 import com.github.pkovacs.util.Utils;
 import com.github.pkovacs.util.data.Point;
 
