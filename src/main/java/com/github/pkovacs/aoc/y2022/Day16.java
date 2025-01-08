@@ -2,7 +2,6 @@ package com.github.pkovacs.aoc.y2022;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -46,10 +45,9 @@ public class Day16 {
             var next = new ArrayList<State>();
             for (int v : valvesWithFlow) {
                 int newTime = s.time - dist[s.valve][v] - 1;
-                if (newTime > 0 && !s.opened.get(v)) {
+                if (newTime > 0 && ((s.opened & (1L << v)) == 0)) {
                     int newTotal = s.total + flow.get(v) * newTime;
-                    var newOpened = (BitSet) s.opened.clone();
-                    newOpened.set(v);
+                    long newOpened = s.opened | (1L << v);
                     next.add(new State(v, newTime, newTotal, newOpened));
                 }
             }
@@ -57,7 +55,7 @@ public class Day16 {
         };
 
         int maxTime = part == 1 ? 30 : 26;
-        var start = new State(names.indexOf("AA"), maxTime, 0, new BitSet());
+        var start = new State(names.indexOf("AA"), maxTime, 0, 0L);
 
         if (part == 1) {
             return dfs(start, advance).stream().mapToInt(State::total).max().orElseThrow();
@@ -92,9 +90,9 @@ public class Day16 {
         advance.apply(s).forEach(next -> dfs(next, advance, states));
     }
 
-    private record State(int valve, int time, int total, BitSet opened) {
+    private record State(int valve, int time, int total, long opened) {
         public boolean isBetterThan(State other) {
-            return other.total <= total && opened.stream().allMatch(other.opened::get);
+            return other.total <= total && (opened & other.opened) == opened;
         }
     }
 

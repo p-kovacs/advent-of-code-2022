@@ -1,6 +1,6 @@
 package com.github.pkovacs.aoc.y2022;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,21 +28,19 @@ public class Day23 {
         var elves = table.findAll('#').collect(Collectors.toSet());
 
         for (int round = 0; true; round++) {
-            var map = new CounterMap<Cell>();
+            var attempts = new ArrayList<Attempt>();
             for (var elf : elves) {
-                map.inc(move(elves, elf, round));
+                attempts.add(new Attempt(elf, move(elves, elf, round)));
             }
+
+            var map = new CounterMap<Cell>();
+            attempts.stream().map(Attempt::to).forEach(map::inc);
+
             if (part == 2 && map.keySet().equals(elves)) {
                 return round + 1;
             }
 
-            var set = new HashSet<Cell>();
-            for (var elf : elves) {
-                var next = move(elves, elf, round);
-                set.add(map.get(next) == 1 ? next : elf);
-            }
-
-            elves = set;
+            elves = attempts.stream().map(a -> map.get(a.to) == 1 ? a.to : a.from).collect(Collectors.toSet());
 
             if (part == 1 && round == 9) {
                 return Cell.rowRange(elves).count() * Cell.colRange(elves).count() - elves.size();
@@ -64,5 +62,7 @@ public class Day23 {
         }
         return elf;
     }
+
+    private record Attempt(Cell from, Cell to) {}
 
 }

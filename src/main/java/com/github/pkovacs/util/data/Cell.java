@@ -69,7 +69,11 @@ public record Cell(int row, int col) implements Position, Comparable<Cell> {
      * Returns a lexicographically sorted stream of the four neighbors of this cell.
      */
     public Stream<Cell> neighbors() {
-        return neighborsAndSelf().filter(c -> c != this);
+        return Stream.of(
+                new Cell(row - 1, col),
+                new Cell(row, col - 1),
+                new Cell(row, col + 1),
+                new Cell(row + 1, col));
     }
 
     /**
@@ -89,7 +93,15 @@ public record Cell(int row, int col) implements Position, Comparable<Cell> {
      * diagonal ones).
      */
     public Stream<Cell> extendedNeighbors() {
-        return extendedNeighborsAndSelf().filter(c -> c != this);
+        return Stream.of(
+                new Cell(row - 1, col - 1),
+                new Cell(row - 1, col),
+                new Cell(row - 1, col + 1),
+                new Cell(row, col - 1),
+                new Cell(row, col + 1),
+                new Cell(row + 1, col - 1),
+                new Cell(row + 1, col),
+                new Cell(row + 1, col + 1));
     }
 
     /**
